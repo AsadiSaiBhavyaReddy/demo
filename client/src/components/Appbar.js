@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,10 +14,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Login', 'Registration', 'Profile', 'Entry', 'Placement'];
+const pages = ['Login', 'Home','Registration', 'Profile', 'Entry', 'Placement'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function ResponsiveAppBar({store}) {
+function ResponsiveAppBar({ store }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -28,12 +29,13 @@ function ResponsiveAppBar({store}) {
   };
 
   const handleCloseNavMenu = (event) => {
-    store.dispatch({type:event.currentTarget.getAttribute("nav")})
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (event) => {
-    store.dispatch({type:"logout"})
+  const handleUserMenuClick = (event) => {
+    if (event.currentTarget.getAttribute("setting") === "Logout") {
+      store.dispatch({ type: "logout" });
+    }
     setAnchorElUser(null);
   };
 
@@ -45,8 +47,8 @@ function ResponsiveAppBar({store}) {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -90,7 +92,12 @@ function ResponsiveAppBar({store}) {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  component={Link}
+                  to={`/${page.toLowerCase()}`}
+                  onClick={handleCloseNavMenu}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -100,8 +107,8 @@ function ResponsiveAppBar({store}) {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -119,8 +126,8 @@ function ResponsiveAppBar({store}) {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
-                nav={page}
+                component={Link}
+                to={`/${page.toLowerCase()}`}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -148,10 +155,14 @@ function ResponsiveAppBar({store}) {
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={handleCloseNavMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={handleUserMenuClick}
+                  setting={setting}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -162,4 +173,5 @@ function ResponsiveAppBar({store}) {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

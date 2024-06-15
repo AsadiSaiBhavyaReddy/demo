@@ -12,6 +12,8 @@ export default function NavReducer(state=initState, action){
             return "Placement";
         case "Profile":
             return "Profile";
+        case "Home":
+            return "Home";
         default:
             return "Login";
     }

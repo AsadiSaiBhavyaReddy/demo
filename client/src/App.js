@@ -1,47 +1,32 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import Registration from './components/Registration'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Registration from './components/Registration';
 import Login from './components/Login';
-import Appbar from './components/Appbar'
+import Appbar from './components/Appbar';
 import Profile from './components/Profile';
 import Entry from './components/Entry';
 import Placement from './components/Placement';
 import Error from './components/Error';
-
-function App({store}) {
-
-  function Page() {
-    switch(store.getState().NavReducer) {
-      case "Login":
-        return(<div><Login store={store} /></div>)
-      case "Registration":
-        return(<div><Registration /></div>)
-      case "Profile":
-        if(localStorage.getItem("role") == 1)
-          return(<div><Profile /></div>)
-        else
-          return(<div><Error /></div>)
-      case "Entry":
-        if(localStorage.getItem("role") == 1)
-          return(<div><Entry /></div>)
-        else
-          return(<div><Error /></div>)
-      case "Placement":
-        if(localStorage.getItem("role") == 1 || localStorage.getItem("role") == 2)
-          return(<div><Placement /></div>)
-        else
-          return(<div><Error /></div>)
-    }
-  }
-
+import Home from './components/Home';
+function App({ store }) {
   return (
-    <div className="App">
-     
-      <div className="App-body">
-        <Appbar store={store} />
-        <center><Page /></center>
+    <Router>
+      <div className="App">
+        <div className="App-body">
+          <Appbar store={store} />
+          <Routes>
+            <Route path="/login" element={<Login store={store} />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/profile" element={localStorage.getItem("role") === "1" ? <Profile /> : <Error />} />
+            <Route path="/entry" element={localStorage.getItem("role") === "1" ? <Entry /> : <Error />} />
+            <Route path="/placement" element={(localStorage.getItem("role") === "1" || localStorage.getItem("role") === "2") ? <Placement /> : <Error />} />
+            <Route path="*" element={<Error />} />
+            <Route path="/home" element={<Home />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
